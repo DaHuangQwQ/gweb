@@ -5,12 +5,12 @@ import (
 	"strings"
 )
 
-type router struct {
+type Router struct {
 	trees map[string]*node
 }
 
-func newRouter() router {
-	return router{
+func newRouter() Router {
+	return Router{
 		trees: map[string]*node{},
 	}
 }
@@ -21,7 +21,7 @@ func newRouter() router {
 // - 不能在同一个位置注册不同的参数路由，例如 /user/:id 和 /user/:name 冲突
 // - 不能在同一个位置同时注册通配符路由和参数路由，例如 /user/:id 和 /user/* 冲突
 // - 同名路径参数，在路由匹配的时候，值会被覆盖。例如 /user/:id/abc/:id，那么 /user/123/abc/456 最终 id = 456
-func (r *router) addRoute(method string, path string, handler HandleFunc, ms ...Middleware) {
+func (r *Router) addRoute(method string, path string, handler HandleFunc, ms ...Middleware) {
 	if path == "" {
 		panic("web: 路由是空字符串")
 	}
@@ -67,7 +67,7 @@ func (r *router) addRoute(method string, path string, handler HandleFunc, ms ...
 
 // findRoute 查找对应的节点
 // 注意，返回的 node 内部 HandleFunc 不为 nil 才算是注册了路由
-func (r *router) findRoute(method string, path string) (*matchInfo, bool) {
+func (r *Router) findRoute(method string, path string) (*matchInfo, bool) {
 	root, ok := r.trees[method]
 	if !ok {
 		return nil, false
@@ -95,7 +95,7 @@ func (r *router) findRoute(method string, path string) (*matchInfo, bool) {
 	return mi, true
 }
 
-func (r *router) findMdls(root *node, segs []string) []Middleware {
+func (r *Router) findMdls(root *node, segs []string) []Middleware {
 	queue := []*node{root}
 	res := make([]Middleware, 0, 16)
 	for i := 0; i < len(segs); i++ {

@@ -79,7 +79,7 @@ func Test_router_AddRoute(t *testing.T) {
 		r.addRoute(tr.method, tr.path, mockHandler)
 	}
 
-	wantRouter := &router{
+	wantRouter := &Router{
 		trees: map[string]*node{
 			http.MethodGet: {
 				path: "/",
@@ -189,7 +189,7 @@ func Test_router_AddRoute(t *testing.T) {
 	})
 }
 
-func (r router) equal(y router) (string, bool) {
+func (r Router) equal(y Router) (string, bool) {
 	for k, v := range r.trees {
 		yv, ok := y.trees[k]
 		if !ok {
