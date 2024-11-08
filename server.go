@@ -1,8 +1,11 @@
 package gweb
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+)
 
-type HandleFunc func(*Context)
+type HandleFunc func(ctx *Context)
 
 type Server interface {
 	http.Handler
@@ -18,11 +21,14 @@ type HttpServerOption func(*HttpServer)
 
 type HttpServer struct {
 	Router
+
+	log func(msg string, args ...any)
 }
 
 func NewHttpServer(opts ...HttpServerOption) *HttpServer {
 	s := &HttpServer{
 		Router: newRouter(),
+		log:    log.Printf,
 	}
 	for _, opt := range opts {
 		opt(s)
@@ -63,16 +69,14 @@ func (h *HttpServer) serve(ctx *Context) {
 		root = info.mdls[i](root)
 	}
 
-	// 第一个应该是回写响应的
-	// 因为它在调用next之后才回写响应，
-	// 所以实际上 flashResp 是最后一个步骤
-	//var m Middleware = func(next HandleFunc) HandleFunc {
-	//	return func(ctx *Context) {
-	//		next(ctx)
-	//		h.flashResp(ctx)
-	//	}
-	//}
-	//root = m(root)
+	// flashResp 是最后一个步骤
+	var m Middleware = func(next HandleFunc) HandleFunc {
+		return func(ctx *Context) {
+			next(ctx)
+			h.flashResp(ctx)
+		}
+	}
+	root = m(root)
 	root(ctx)
 }
 
@@ -106,4 +110,14 @@ func (h *HttpServer) UseAll(path string, middleware ...Middleware) {
 	h.addRoute(http.MethodPut, path, nil, middleware...)
 	h.addRoute(http.MethodDelete, path, nil, middleware...)
 	h.addRoute(http.MethodOptions, path, nil, middleware...)
+}
+
+func (h *HttpServer) flashResp(ctx *Context) {
+	if ctx.RespStatusCode != 0 {
+		ctx.Resp.WriteHeader(ctx.RespStatusCode)
+	}
+	n, err := ctx.Resp.Write(ctx.RespData)
+	if err != nil || n != len(ctx.RespData) {
+		h.log("flash resp write error:", err)
+	}
 }

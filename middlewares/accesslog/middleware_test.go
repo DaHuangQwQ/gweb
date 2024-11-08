@@ -1,7 +1,7 @@
 package accesslog
 
 import (
-	"gweb"
+	"github.com/DaHuangQwQ/gweb"
 	"testing"
 	"time"
 )
