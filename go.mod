@@ -1,4 +1,4 @@
-module gweb
+module github.com/DaHuangQwQ/gweb
 
 go 1.22
 
