@@ -14,6 +14,10 @@ type MiddlewareBuilder struct {
 	Tracer trace.Tracer
 }
 
+func NewMiddlewareBuilder(tracer trace.Tracer) *MiddlewareBuilder {
+	return &MiddlewareBuilder{Tracer: tracer}
+}
+
 func (m *MiddlewareBuilder) Build() gweb.Middleware {
 	if m.Tracer == nil {
 		m.Tracer = otel.GetTracerProvider().Tracer(instrumentationName)
