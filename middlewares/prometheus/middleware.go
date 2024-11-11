@@ -14,6 +14,10 @@ type MiddlewareBuilder struct {
 	Help      string
 }
 
+func NewMiddlewareBuilder(namespace string, subsystem string, name string, help string) *MiddlewareBuilder {
+	return &MiddlewareBuilder{Namespace: namespace, Subsystem: subsystem, Name: name, Help: help}
+}
+
 func (m *MiddlewareBuilder) Build() gweb.Middleware {
 	vector := prometheus.NewSummaryVec(prometheus.SummaryOpts{
 		Name:      m.Name,
