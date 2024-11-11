@@ -2,7 +2,7 @@ package accesslog
 
 import (
 	"encoding/json"
-	"gweb"
+	"github.com/DaHuangQwQ/gweb"
 )
 
 type MiddlewareBuilder struct {
