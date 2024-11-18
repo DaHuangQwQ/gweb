@@ -2,7 +2,9 @@ package accesslog
 
 import (
 	"encoding/json"
-	"github.com/DaHuangQwQ/gweb"
+	"github.com/DaHuangQwQ/gweb/internal/context"
+	"github.com/DaHuangQwQ/gweb/internal/types"
+	"github.com/DaHuangQwQ/gweb/middlewares"
 )
 
 type MiddlewareBuilder struct {
@@ -21,9 +23,9 @@ func (m *MiddlewareBuilder) LogFunc(fn func(log string)) *MiddlewareBuilder {
 	return m
 }
 
-func (m *MiddlewareBuilder) Build() gweb.Middleware {
-	return func(next gweb.HandleFunc) gweb.HandleFunc {
-		return func(ctx *gweb.Context) {
+func (m *MiddlewareBuilder) Build() middlewares.Middleware {
+	return func(next types.HandleFunc) types.HandleFunc {
+		return func(ctx *context.Context) {
 			defer func() {
 				l := accessLog{
 					Host:       ctx.Req.Host,

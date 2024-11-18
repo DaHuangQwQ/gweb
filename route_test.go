@@ -2,6 +2,9 @@ package gweb
 
 import (
 	"fmt"
+	"github.com/DaHuangQwQ/gweb/internal/context"
+	"github.com/DaHuangQwQ/gweb/internal/types"
+	"github.com/DaHuangQwQ/gweb/middlewares"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"reflect"
@@ -73,7 +76,7 @@ func Test_router_AddRoute(t *testing.T) {
 		},
 	}
 
-	mockHandler := func(ctx *Context) {}
+	mockHandler := func(ctx *context.Context) {}
 	r := newRouter()
 	for _, tr := range testRoutes {
 		r.addRoute(tr.method, tr.path, mockHandler)
@@ -284,7 +287,7 @@ func Test_router_findRoute(t *testing.T) {
 		},
 	}
 
-	mockHandler := func(ctx *Context) {}
+	mockHandler := func(ctx *context.Context) {}
 
 	testCases := []struct {
 		name   string
@@ -451,9 +454,9 @@ func Test_router_findRoute(t *testing.T) {
 }
 
 func Test_findRoute_Middleware(t *testing.T) {
-	var mdlBuilder = func(i byte) Middleware {
-		return func(next HandleFunc) HandleFunc {
-			return func(ctx *Context) {
+	var mdlBuilder = func(i byte) middlewares.Middleware {
+		return func(next types.HandleFunc) types.HandleFunc {
+			return func(ctx *context.Context) {
 				ctx.RespData = append(ctx.RespData, i)
 				next(ctx)
 			}
@@ -462,47 +465,47 @@ func Test_findRoute_Middleware(t *testing.T) {
 	mdlsRoute := []struct {
 		method string
 		path   string
-		mdls   []Middleware
+		mdls   []middlewares.Middleware
 	}{
 		{
 			method: http.MethodGet,
 			path:   "/a/b",
-			mdls:   []Middleware{mdlBuilder('a'), mdlBuilder('b')},
+			mdls:   []middlewares.Middleware{mdlBuilder('a'), mdlBuilder('b')},
 		},
 		{
 			method: http.MethodGet,
 			path:   "/a/*",
-			mdls:   []Middleware{mdlBuilder('a'), mdlBuilder('*')},
+			mdls:   []middlewares.Middleware{mdlBuilder('a'), mdlBuilder('*')},
 		},
 		{
 			method: http.MethodGet,
 			path:   "/a/b/*",
-			mdls:   []Middleware{mdlBuilder('a'), mdlBuilder('b'), mdlBuilder('*')},
+			mdls:   []middlewares.Middleware{mdlBuilder('a'), mdlBuilder('b'), mdlBuilder('*')},
 		},
 		{
 			method: http.MethodPost,
 			path:   "/a/b/*",
-			mdls:   []Middleware{mdlBuilder('a'), mdlBuilder('b'), mdlBuilder('*')},
+			mdls:   []middlewares.Middleware{mdlBuilder('a'), mdlBuilder('b'), mdlBuilder('*')},
 		},
 		{
 			method: http.MethodPost,
 			path:   "/a/*/c",
-			mdls:   []Middleware{mdlBuilder('a'), mdlBuilder('*'), mdlBuilder('c')},
+			mdls:   []middlewares.Middleware{mdlBuilder('a'), mdlBuilder('*'), mdlBuilder('c')},
 		},
 		{
 			method: http.MethodPost,
 			path:   "/a/b/c",
-			mdls:   []Middleware{mdlBuilder('a'), mdlBuilder('b'), mdlBuilder('c')},
+			mdls:   []middlewares.Middleware{mdlBuilder('a'), mdlBuilder('b'), mdlBuilder('c')},
 		},
 		{
 			method: http.MethodDelete,
 			path:   "/*",
-			mdls:   []Middleware{mdlBuilder('*')},
+			mdls:   []middlewares.Middleware{mdlBuilder('*')},
 		},
 		{
 			method: http.MethodDelete,
 			path:   "/",
-			mdls:   []Middleware{mdlBuilder('/')},
+			mdls:   []middlewares.Middleware{mdlBuilder('/')},
 		},
 	}
 	r := newRouter()
@@ -563,7 +566,7 @@ func Test_findRoute_Middleware(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			mi, _ := r.findRoute(tc.method, tc.path)
 			mdls := mi.mdls
-			var root HandleFunc = func(ctx *Context) {
+			var root types.HandleFunc = func(ctx *context.Context) {
 				// 使用 string 可读性比较高
 				assert.Equal(t, tc.wantResp, string(ctx.RespData))
 			}
@@ -571,7 +574,7 @@ func Test_findRoute_Middleware(t *testing.T) {
 				root = mdls[i](root)
 			}
 			// 开始调度
-			root(&Context{
+			root(&context.Context{
 				RespData: make([]byte, 0, len(tc.wantResp)),
 			})
 		})

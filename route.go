@@ -2,6 +2,8 @@ package gweb
 
 import (
 	"fmt"
+	"github.com/DaHuangQwQ/gweb/internal/types"
+	"github.com/DaHuangQwQ/gweb/middlewares"
 	"strings"
 )
 
@@ -21,7 +23,7 @@ func newRouter() Router {
 // - 不能在同一个位置注册不同的参数路由，例如 /user/:id 和 /user/:name 冲突
 // - 不能在同一个位置同时注册通配符路由和参数路由，例如 /user/:id 和 /user/* 冲突
 // - 同名路径参数，在路由匹配的时候，值会被覆盖。例如 /user/:id/abc/:id，那么 /user/123/abc/456 最终 id = 456
-func (r *Router) addRoute(method string, path string, handler HandleFunc, ms ...Middleware) {
+func (r *Router) addRoute(method string, path string, handler types.HandleFunc, ms ...middlewares.Middleware) {
 	if path == "" {
 		panic("web: 路由是空字符串")
 	}
@@ -95,9 +97,9 @@ func (r *Router) findRoute(method string, path string) (*matchInfo, bool) {
 	return mi, true
 }
 
-func (r *Router) findMdls(root *node, segs []string) []Middleware {
+func (r *Router) findMdls(root *node, segs []string) []middlewares.Middleware {
 	queue := []*node{root}
-	res := make([]Middleware, 0, 16)
+	res := make([]middlewares.Middleware, 0, 16)
 	for i := 0; i < len(segs); i++ {
 		seg := segs[i]
 		var children []*node
@@ -130,9 +132,9 @@ type node struct {
 	// 子节点的 path => node
 	children map[string]*node
 	// handler 命中路由之后执行的逻辑
-	handler HandleFunc
+	handler types.HandleFunc
 	// 注册在该节点上的 middleware
-	mdls []Middleware
+	mdls []middlewares.Middleware
 
 	// route 到达该节点的完整的路由路径
 	route string
@@ -142,7 +144,7 @@ type node struct {
 
 	paramChild *node
 
-	matchedMdls []Middleware
+	matchedMdls []middlewares.Middleware
 }
 
 func (n *node) childrenOf(path string) []*node {
@@ -229,7 +231,7 @@ func (n *node) childOrCreate(path string) *node {
 type matchInfo struct {
 	n          *node
 	pathParams map[string]string
-	mdls       []Middleware
+	mdls       []middlewares.Middleware
 }
 
 func (m *matchInfo) addValue(key string, value string) {

@@ -2,6 +2,8 @@ package gweb
 
 import (
 	"fmt"
+	"github.com/DaHuangQwQ/gweb/internal/context"
+	"github.com/DaHuangQwQ/gweb/internal/types"
 	lru "github.com/hashicorp/golang-lru"
 	"io"
 	"io/ioutil"
@@ -20,14 +22,14 @@ type FileUploader struct {
 	DstPathFunc func(fh *multipart.FileHeader) string
 }
 
-func (f *FileUploader) Handle() HandleFunc {
+func (f *FileUploader) Handle() types.HandleFunc {
 	// 这里可以额外做一些检测
 	// if f.FileField == "" {
 	// 	// 这种方案默认值我其实不是很喜欢
 	// 	// 因为我们需要教会用户说，这个 file 是指什么意思
 	// 	f.FileField = "file"
 	// }
-	return func(ctx *Context) {
+	return func(ctx *context.Context) {
 		src, srcHeader, err := ctx.Req.FormFile(f.FileField)
 		if err != nil {
 			ctx.RespStatusCode = 400
@@ -61,7 +63,7 @@ func (f *FileUploader) Handle() HandleFunc {
 // 它可以直接用来注册路由
 // 上一种可以在返回 HandleFunc 之前可以继续检测一下传入的字段
 // 这种形态和 Option 模式配合就很好
-func (f *FileUploader) HandleFunc(ctx *Context) {
+func (f *FileUploader) HandleFunc(ctx *context.Context) {
 	src, srcHeader, err := ctx.Req.FormFile(f.FileField)
 	if err != nil {
 		ctx.RespStatusCode = 400
@@ -97,8 +99,8 @@ type FileDownloader struct {
 	Dir string
 }
 
-func (f *FileDownloader) Handle() HandleFunc {
-	return func(ctx *Context) {
+func (f *FileDownloader) Handle() types.HandleFunc {
+	return func(ctx *context.Context) {
 		req, _ := ctx.QueryValue("file").String()
 		path := filepath.Join(f.Dir, filepath.Clean(req))
 		fn := filepath.Base(path)
@@ -175,7 +177,7 @@ func WithMoreExtension(extMap map[string]string) StaticResourceHandlerOption {
 	}
 }
 
-func (h *StaticResourceHandler) Handle(ctx *Context) {
+func (h *StaticResourceHandler) Handle(ctx *context.Context) {
 	req, _ := ctx.PathValue("file").String()
 	if item, ok := h.readFileFromData(req); ok {
 		log.Printf("从缓存中读取数据...")

@@ -1,14 +1,18 @@
 package recover
 
-import "github.com/DaHuangQwQ/gweb"
+import (
+	"github.com/DaHuangQwQ/gweb/internal/context"
+	"github.com/DaHuangQwQ/gweb/internal/types"
+	"github.com/DaHuangQwQ/gweb/middlewares"
+)
 
 type MiddlewareBuilder struct {
 	StatusCode int
 	Data       []byte
-	Log        func(ctx *gweb.Context)
+	Log        func(ctx *context.Context)
 }
 
-func NewMiddlewareBuilder(statusCode int, data []byte, log func(ctx *gweb.Context)) *MiddlewareBuilder {
+func NewMiddlewareBuilder(statusCode int, data []byte, log func(ctx *context.Context)) *MiddlewareBuilder {
 	return &MiddlewareBuilder{
 		StatusCode: statusCode,
 		Data:       data,
@@ -16,9 +20,9 @@ func NewMiddlewareBuilder(statusCode int, data []byte, log func(ctx *gweb.Contex
 	}
 }
 
-func (m *MiddlewareBuilder) Build() gweb.Middleware {
-	return func(next gweb.HandleFunc) gweb.HandleFunc {
-		return func(ctx *gweb.Context) {
+func (m *MiddlewareBuilder) Build() middlewares.Middleware {
+	return func(next types.HandleFunc) types.HandleFunc {
+		return func(ctx *context.Context) {
 			defer func() {
 				if err := recover(); err != nil {
 					ctx.RespStatusCode = m.StatusCode

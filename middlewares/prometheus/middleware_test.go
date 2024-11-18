@@ -2,6 +2,7 @@ package prometheus
 
 import (
 	"github.com/DaHuangQwQ/gweb"
+	"github.com/DaHuangQwQ/gweb/internal/context"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	"testing"
@@ -10,10 +11,10 @@ import (
 
 func TestMiddlewareBuilder_Build(t *testing.T) {
 	s := gweb.NewHttpServer()
-	s.Get("/", func(ctx *gweb.Context) {
+	s.Get("/", func(ctx *context.Context) {
 		ctx.Resp.Write([]byte("hello, world"))
 	})
-	s.Get("/user", func(ctx *gweb.Context) {
+	s.Get("/user", func(ctx *context.Context) {
 		time.Sleep(time.Second)
 	})
 

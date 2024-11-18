@@ -2,6 +2,8 @@ package test
 
 import (
 	"github.com/DaHuangQwQ/gweb"
+	"github.com/DaHuangQwQ/gweb/internal/context"
+	"github.com/DaHuangQwQ/gweb/internal/types"
 	"github.com/DaHuangQwQ/gweb/session"
 	"github.com/DaHuangQwQ/gweb/session/cookie"
 	"github.com/DaHuangQwQ/gweb/session/memory"
@@ -23,7 +25,7 @@ func TestManager(t *testing.T) {
 			})),
 	}
 
-	s.Get("/login", func(ctx *gweb.Context) {
+	s.Get("/login", func(ctx *context.Context) {
 		// 登录校验
 		id := uuid.New()
 		sess, err := m.InitSession(ctx, id.String())
@@ -37,7 +39,7 @@ func TestManager(t *testing.T) {
 			return
 		}
 	})
-	s.Get("/resource", func(ctx *gweb.Context) {
+	s.Get("/resource", func(ctx *context.Context) {
 		sess, err := m.GetSession(ctx)
 		if err != nil {
 			ctx.RespStatusCode = http.StatusInternalServerError
@@ -47,12 +49,12 @@ func TestManager(t *testing.T) {
 		ctx.RespData = []byte(val)
 	})
 
-	s.Get("/logout", func(ctx *gweb.Context) {
+	s.Get("/logout", func(ctx *context.Context) {
 		_ = m.RemoveSession(ctx)
 	})
 
-	s.UseAll("/*", func(next gweb.HandleFunc) gweb.HandleFunc {
-		return func(ctx *gweb.Context) {
+	s.UseAll("/*", func(next types.HandleFunc) types.HandleFunc {
+		return func(ctx *context.Context) {
 			if ctx.Req.URL.Path != "/login" {
 				sess, err := m.GetSession(ctx)
 				if err != nil {

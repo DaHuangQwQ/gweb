@@ -2,6 +2,7 @@ package opentelemetry
 
 import (
 	"github.com/DaHuangQwQ/gweb"
+	"github.com/DaHuangQwQ/gweb/internal/context"
 	"go.opentelemetry.io/otel"
 	"testing"
 )
@@ -15,7 +16,7 @@ func TestMiddlewareBuilder_Build(t *testing.T) {
 	server := gweb.NewHttpServer()
 	server.UseAll("/*", builder.Build())
 
-	server.Get("/*", func(ctx *gweb.Context) {
+	server.Get("/*", func(ctx *context.Context) {
 		_, span := tracer.Start(ctx.Req.Context(), "test")
 		defer span.End()
 	})

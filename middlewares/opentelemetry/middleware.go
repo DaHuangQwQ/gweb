@@ -1,7 +1,9 @@
 package opentelemetry
 
 import (
-	"github.com/DaHuangQwQ/gweb"
+	"github.com/DaHuangQwQ/gweb/internal/context"
+	"github.com/DaHuangQwQ/gweb/internal/types"
+	"github.com/DaHuangQwQ/gweb/middlewares"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
@@ -18,12 +20,12 @@ func NewMiddlewareBuilder(tracer trace.Tracer) *MiddlewareBuilder {
 	return &MiddlewareBuilder{Tracer: tracer}
 }
 
-func (m *MiddlewareBuilder) Build() gweb.Middleware {
+func (m *MiddlewareBuilder) Build() middlewares.Middleware {
 	if m.Tracer == nil {
 		m.Tracer = otel.GetTracerProvider().Tracer(instrumentationName)
 	}
-	return func(next gweb.HandleFunc) gweb.HandleFunc {
-		return func(ctx *gweb.Context) {
+	return func(next types.HandleFunc) types.HandleFunc {
+		return func(ctx *context.Context) {
 			reqCtx := ctx.Req.Context()
 
 			// 和客户端的 trace 结合在一起

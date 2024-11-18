@@ -1,8 +1,9 @@
-package gweb
+package context
 
 import (
 	"encoding/json"
 	"errors"
+	"github.com/DaHuangQwQ/gweb/internal/template"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -29,7 +30,7 @@ type Context struct {
 	cacheQueryValues url.Values
 
 	// 页面渲染的引擎
-	tplEngine TemplateEngine
+	tplEngine template.TemplateEngine
 
 	// 用户可以自由决定在这里存储什么，
 	// 主要用于解决在不同 Middleware 之间数据传递的问题

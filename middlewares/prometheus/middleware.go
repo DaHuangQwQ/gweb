@@ -1,7 +1,9 @@
 package prometheus
 
 import (
-	"github.com/DaHuangQwQ/gweb"
+	"github.com/DaHuangQwQ/gweb/internal/context"
+	"github.com/DaHuangQwQ/gweb/internal/types"
+	"github.com/DaHuangQwQ/gweb/middlewares"
 	"github.com/prometheus/client_golang/prometheus"
 	"strconv"
 	"time"
@@ -18,7 +20,7 @@ func NewMiddlewareBuilder(namespace string, subsystem string, name string, help 
 	return &MiddlewareBuilder{Namespace: namespace, Subsystem: subsystem, Name: name, Help: help}
 }
 
-func (m *MiddlewareBuilder) Build() gweb.Middleware {
+func (m *MiddlewareBuilder) Build() middlewares.Middleware {
 	vector := prometheus.NewSummaryVec(prometheus.SummaryOpts{
 		Name:      m.Name,
 		Subsystem: m.Subsystem,
@@ -35,8 +37,8 @@ func (m *MiddlewareBuilder) Build() gweb.Middleware {
 
 	prometheus.MustRegister(vector)
 
-	return func(next gweb.HandleFunc) gweb.HandleFunc {
-		return func(ctx *gweb.Context) {
+	return func(next types.HandleFunc) types.HandleFunc {
+		return func(ctx *context.Context) {
 			startTime := time.Now()
 
 			defer func() {
