@@ -1,6 +1,33 @@
 # gweb
 an easy go web framework
 
+```shell
+go get github.com/DaHuangQwQ/gweb
+```
+## 示例
+```golang
+package main
+
+import (
+	"github.com/DaHuangQwQ/gweb"
+	"github.com/DaHuangQwQ/gweb/context"
+)
+
+func main() {
+	server := gweb.Default()
+
+	server.Get("/", func(ctx *context.Context) {
+		_ = ctx.RespJSONOK("hello world")
+		return
+	})
+
+	err := server.Start(":8081")
+	if err != nil {
+		panic(err)
+	}
+}
+```
+
 ## route tree
 - 静态匹配
 - 通配符匹配
