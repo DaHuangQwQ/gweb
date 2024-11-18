@@ -1,5 +1,7 @@
 package types
 
-import "github.com/DaHuangQwQ/gweb/internal/context"
+import (
+	"github.com/DaHuangQwQ/gweb/context"
+)
 
 type HandleFunc func(ctx *context.Context)

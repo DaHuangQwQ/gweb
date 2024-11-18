@@ -2,7 +2,7 @@ package prometheus
 
 import (
 	"github.com/DaHuangQwQ/gweb"
-	"github.com/DaHuangQwQ/gweb/internal/context"
+	"github.com/DaHuangQwQ/gweb/context"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	"testing"

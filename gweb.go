@@ -1,7 +1,7 @@
 package gweb
 
 import (
-	"github.com/DaHuangQwQ/gweb/internal/context"
+	"github.com/DaHuangQwQ/gweb/context"
 	"github.com/DaHuangQwQ/gweb/middlewares/accesslog"
 	"github.com/DaHuangQwQ/gweb/middlewares/errhdl"
 	"github.com/DaHuangQwQ/gweb/middlewares/prometheus"

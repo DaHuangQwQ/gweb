@@ -1,7 +1,7 @@
 package session
 
 import (
-	"github.com/DaHuangQwQ/gweb/internal/context"
+	"github.com/DaHuangQwQ/gweb/context"
 )
 
 type Manager struct {

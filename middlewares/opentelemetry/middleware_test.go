@@ -2,7 +2,7 @@ package opentelemetry
 
 import (
 	"github.com/DaHuangQwQ/gweb"
-	"github.com/DaHuangQwQ/gweb/internal/context"
+	"github.com/DaHuangQwQ/gweb/context"
 	"go.opentelemetry.io/otel"
 	"testing"
 )

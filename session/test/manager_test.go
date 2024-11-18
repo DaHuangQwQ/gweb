@@ -2,11 +2,11 @@ package test
 
 import (
 	"github.com/DaHuangQwQ/gweb"
-	"github.com/DaHuangQwQ/gweb/internal/context"
-	"github.com/DaHuangQwQ/gweb/internal/types"
+	"github.com/DaHuangQwQ/gweb/context"
 	"github.com/DaHuangQwQ/gweb/session"
 	"github.com/DaHuangQwQ/gweb/session/cookie"
 	"github.com/DaHuangQwQ/gweb/session/memory"
+	"github.com/DaHuangQwQ/gweb/types"
 	"github.com/google/uuid"
 	"net/http"
 	"testing"

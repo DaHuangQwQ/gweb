@@ -1,7 +1,7 @@
 package gweb
 
 import (
-	"github.com/DaHuangQwQ/gweb/internal/context"
+	"github.com/DaHuangQwQ/gweb/context"
 	"testing"
 )
 

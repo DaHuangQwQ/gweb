@@ -2,9 +2,9 @@ package gweb
 
 import (
 	"fmt"
-	"github.com/DaHuangQwQ/gweb/internal/context"
-	"github.com/DaHuangQwQ/gweb/internal/types"
+	"github.com/DaHuangQwQ/gweb/context"
 	"github.com/DaHuangQwQ/gweb/middlewares"
+	"github.com/DaHuangQwQ/gweb/types"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"reflect"

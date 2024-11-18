@@ -3,7 +3,7 @@ package context
 import (
 	"encoding/json"
 	"errors"
-	"github.com/DaHuangQwQ/gweb/internal/template"
+	"github.com/DaHuangQwQ/gweb/template"
 	"net/http"
 	"net/url"
 	"strconv"

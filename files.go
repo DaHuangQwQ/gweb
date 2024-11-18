@@ -2,8 +2,8 @@ package gweb
 
 import (
 	"fmt"
-	"github.com/DaHuangQwQ/gweb/internal/context"
-	"github.com/DaHuangQwQ/gweb/internal/types"
+	"github.com/DaHuangQwQ/gweb/context"
+	"github.com/DaHuangQwQ/gweb/types"
 	lru "github.com/hashicorp/golang-lru"
 	"io"
 	"io/ioutil"

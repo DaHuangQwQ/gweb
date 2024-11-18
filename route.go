@@ -2,8 +2,8 @@ package gweb
 
 import (
 	"fmt"
-	"github.com/DaHuangQwQ/gweb/internal/types"
 	"github.com/DaHuangQwQ/gweb/middlewares"
+	"github.com/DaHuangQwQ/gweb/types"
 	"strings"
 )
 

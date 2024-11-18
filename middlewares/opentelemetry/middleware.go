@@ -1,9 +1,9 @@
 package opentelemetry
 
 import (
-	"github.com/DaHuangQwQ/gweb/internal/context"
-	"github.com/DaHuangQwQ/gweb/internal/types"
+	"github.com/DaHuangQwQ/gweb/context"
 	"github.com/DaHuangQwQ/gweb/middlewares"
+	"github.com/DaHuangQwQ/gweb/types"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
